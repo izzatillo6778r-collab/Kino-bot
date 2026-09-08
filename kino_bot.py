@@ -1,3 +1,4 @@
+import web_server
 import os, asyncio, logging, aiosqlite, re
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.filters import Command
