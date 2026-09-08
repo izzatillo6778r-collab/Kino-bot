@@ -200,9 +200,9 @@ async def search_and_send_movie(msg: types.Message, query: str):
     else:
         await msg.answer("❌ <b>Bunday kod yoki nomga ega kino topilmadi!</b>", parse_mode="HTML")
 
-@dp.message(F.text == "⚙️ Admin Boshqaruv Paneli")
+@dp.message(F.text.in_(["⚙️ Admin Boshqaruv Paneli", "/admin"]))
 async def show_admin_panel(msg: types.Message):
-    if not await is_admin(msg.from_user.id): return
+    if msg.from_user.id != OWNER_ID and not await is_admin(msg.from_user.id): return await msg.answer("Siz admin emassiz!")
     await msg.answer("👑 <b>Boshqaruv Paneli:</b>", reply_markup=get_admin_panel_kb(msg.from_user.id == OWNER_ID), parse_mode="HTML")
 
 # --- KINO YUKLASH ---
@@ -360,7 +360,7 @@ async def delete_kino_req(cb: types.CallbackQuery):
 
 @dp.message(Command("del"))
 async def execute_del(msg: types.Message):
-    if not await is_admin(msg.from_user.id): return
+    if msg.from_user.id != OWNER_ID and not await is_admin(msg.from_user.id): return await msg.answer("Siz admin emassiz!")
     p = msg.text.split()
     if len(p) < 2: return await msg.answer("Kodni yozing!")
     async with aiosqlite.connect("kino_database.db") as db:
